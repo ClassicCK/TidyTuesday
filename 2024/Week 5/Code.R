@@ -3,6 +3,8 @@ library(ggplot2)
 library(showtext)
 library(tidyverse)
 library(ggtext)
+library(grid)
+library(magrittr)
 
 # function to set political party in presidency during year
 get_presidential_party <- function(year) {
@@ -79,7 +81,15 @@ body_font <- "body_font"
 
 title_text <- "Shadows of Partisanship: Groundhog Day in America 2024"
 subtitle_text <- "Groundhogs Gauge the Political Climate: 6 degrees of Warning? Under <b><span style='color:#0015BC;'>Democratic Presidents</b></span>, Punxsutawney Phil pumps the breaks on warming, while those <b><span style='color:#e9141d;'>Republican regimes</b></span> hit that greenhouse gas accelerator."
-caption_text <- c("Graphic: Christopher L. Kilner, PhD", "Data: groundhog-day.com")
+caption_text <- c("Graphic: Christopher L. Kilner, PhD", "@ClassicCK", "Data: groundhog-day.com")
+
+# Load the image
+image_path <- "2024/Week 5/favicon.png"
+my_image <- png::readPNG(image_path)
+g <- rasterGrob(my_image, interpolate = TRUE, 
+                width=unit(8,'cm'),
+                x = unit(1,"npc"), y = unit(1,"npc"),
+                hjust = 1, vjust=0.2)
 
 # ------ Plot ------ 
 ggplot() +
@@ -90,7 +100,7 @@ ggplot() +
   labs(title = title_text,
        subtitle = subtitle_text,
        caption = caption_text,
-       x = paste0("← Spring is Sprung", strrep(" ", 30), "Probability of Seeing its Shadow", strrep(" ", 30), "Winter is Coming →"),
+       x = paste0("← Spring is Sprung", strrep(" ", 60), "Probability of Seeing its Shadow", strrep(" ", 60), "Winter is Coming →"),
        y = "Density") +
   theme_minimal() +
   geom_segment(aes(x = 0, xend = 1, y = 0, yend = 0), color = "grey", linetype = "solid") +
@@ -102,10 +112,10 @@ ggplot() +
     # Axis text
     axis.text.x = element_text(family = body_font, 
                                face = "bold",
-                               size=12),
+                               size=14),
     axis.text.y = element_text(family = body_font, 
                                face = "bold",
-                               size=12),
+                               size=14),
     
     # Legend
     legend.position = "none",
@@ -113,35 +123,36 @@ ggplot() +
     # TITLE
     plot.title.position = "plot",
     plot.title = element_textbox(margin = margin(20, 0, 5, 0),
-                                 size = 20,
+                                 size = 24,
                                  family = title_font,
                                  face = "bold",
-                                 width = unit(45, "lines")),
+                                 width = unit(75, "lines")),
     # SUB-TITLE
     plot.subtitle = element_textbox(margin = margin(5, 0, 30, 0),
-                                    size = 14,
+                                    size = 18,
                                     color = "grey30",
                                     family = body_font,
-                                    width = unit(42, "lines")),
+                                    width = unit(52, "lines")),
     
     # Caption
-    plot.caption = element_text(hjust = c(0, 1),
+    plot.caption = element_text(hjust = c(0, 0.5, 1),
                                 family=body_font,
                                 face="plain",
-                                size=9, 
+                                size=10, 
                                 color="grey70",
                                 margin=margin(10,0,0,0)),
     
     plot.background = element_rect(color="#f8f8f8", fill="#f8f8f8"),
     plot.margin = margin(20, 20, 20, 20)
   ) +
-  scale_y_continuous(labels = abs, breaks = waiver())
+  scale_y_continuous(labels = abs, breaks = waiver()) +
+  annotation_custom(grob = g) +
+  coord_cartesian(clip = "off")
 
 # ------ Save Plot ------ 
 
 showtext_opts(dpi = 320)
-ggsave("week-05.png", height = 9,
-       width = 16, dpi=320)  
+ggsave("2024/Week 5/Twitter.png", height = 9, width = 16, dpi=320)  
 showtext_auto(FALSE)
 
 
