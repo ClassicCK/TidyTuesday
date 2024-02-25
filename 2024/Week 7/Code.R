@@ -5,7 +5,7 @@ library(tidyverse)
 library(ggtext)
 library(ggbump)
 library(plyr)
-library(cowplot)
+
 
 # ------ Data Manipulation ------ 
 # load data
